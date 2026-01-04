@@ -2,6 +2,10 @@
 
 **Analyzes GitHub repos and screenshots using Gemini to generate noir detective-themed project reports with AI narration.**
 
+## 🎥 Watch the Demo
+
+[![Project Ghost Demo](assets/thumbnail.png)](https://youtu.be/jg09IBUScDI)
+
 ## What It Does
 
 Point it at a GitHub repo URL, optionally upload a screenshot, and it'll analyze the code using Gemini's multimodal capabilities to generate a "Coroner's Report" complete with AI narration. Built as a hackathon project to test out Gemini + ElevenLabs + Vultr together.
