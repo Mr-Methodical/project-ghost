@@ -16,9 +16,9 @@ Project Ghost solves this by analyzing any GitHub repository and providing AI-po
 ### Core Features
 
 1. **Multimodal Analysis**
-   - Analyze GitHub repository URLs using Gemini 1.5 Flash
+   - Analyze GitHub repository URLs using Gemini 2.5 Flash
    - Upload UI screenshots for contextual understanding
-   - Combines code intelligence + visual design feedback
+   - Combines code intelligence + visual design feedback in a single request
 
 2. **Coroner's Report**
    - **Cause of Death**: Why the project failed
@@ -26,23 +26,24 @@ Project Ghost solves this by analyzing any GitHub repository and providing AI-po
    - **Resurrection Plan**: How to win with this idea today
 
 3. **AI-Powered Narration**
-   - Text-to-speech via ElevenLabs API
-   - Noir detective voice (Adam, Clyde, or Nicole)
+   - Text-to-speech via ElevenLabs API (v0.2.15)
+   - Dynamic voice selection from available voices
    - Makes analysis engaging and memorable
 
 ### Tech Stack
 
 - **Frontend**: Streamlit (rapid development, judges love it)
-- **AI Analysis**: Google Gemini 1.5 Flash (multimodal, cost-effective)
-- **Voice**: ElevenLabs API (natural, professional narration)
+- **AI Analysis**: Google Gemini 2.5 Flash (multimodal, faster inference)
+- **Voice**: ElevenLabs v0.2.15 (natural, professional narration)
+- **Cloud**: Vultr Ubuntu 22.04 (live deployment)
 - **Environment**: Python 3.10+
 
 ## Why This Wins
 
-### ✅ Category Coverage
-- **Gemini API**: Full multimodal integration (text + images)
-- **Developer Tools**: Solves a real pain point for hackers
-- **Hackathon Meta**: A tool built by hackers, for hackers
+### ✅ Sponsor Category Coverage
+- **Google Gemini**: Full multimodal integration (text + images) using Gemini 2.5 Flash
+- **ElevenLabs**: Text-to-speech narration with voice selection
+- **Vultr**: Live deployment on Vultr cloud at 207.246.125.6
 
 ### ✅ Judging Criteria
 - **Innovation**: Novel combination of Gemini + ElevenLabs + Noir theme
@@ -50,11 +51,12 @@ Project Ghost solves this by analyzing any GitHub repository and providing AI-po
 - **Polish**: Professional UI with dark mode + noir aesthetic
 - **Practicality**: Actually useful for analyzing hackathon projects
 
-### ✅ Security Best Practices
-- `.env` file for API keys (never committed)
+### ✅ Security & Production Best Practices
+- `.env` file for API keys (never committed, gitignored)
 - `.env.example` for documentation
-- Input validation on all user inputs
-- Error handling that doesn't expose secrets
+- Session state initialization to prevent Streamlit crashes
+- Markdown stripping before voice generation for clean narration
+- Tested and deployed on production cloud infrastructure
 
 ## Setup Instructions
 
@@ -102,38 +104,40 @@ Navigate to `http://localhost:8501` and start analyzing projects!
 - Free tier: 10,000 characters/month
 - Used for voice narration
 
+## Live Deployment
+
+**Project Ghost is live and running at:** http://207.246.125.6
+
+Judges can test it directly without setting up locally. The app is fully functional with all APIs integrated and tested in production.
+
 ## Demo
 
 **Ideal Demo Flow for Judges:**
 
-1. Paste link to a real failing hackathon project
-2. Upload a screenshot of messy UI/old design
-3. Let Gemini analyze both
-4. Play the ElevenLabs narration
-5. Show the "Resurrection Plan" section
+1. Visit http://207.246.125.6 (no setup required)
+2. Paste a GitHub URL (e.g., a previous hackathon project)
+3. Optionally upload a screenshot of the UI
+4. Click "EXECUTE FORENSIC AUTOPSY"
+5. Read the Coroner's Report and listen to narration
 
 **Why this impresses judges:**
-- Shows real multimodal AI capability
-- Demonstrates API integration skills
-- Proves the tool actually works
-- Memorable demo (noir detective theme)
+- Live demo on production infrastructure (Vultr)
+- Real multimodal Gemini 2.5 Flash capability
+- Professional voice narration (ElevenLabs)
+- Shows end-to-end API integration
+- Memorable noir theme execution
 
-## Commit History (Strategic for Judges)
+## Production Issues Overcome
 
-Each commit tells a story of thoughtful development:
+This project demonstrates real problem-solving under pressure:
 
-1. `feat: env setup and security best practices` - Shows you think about security
-2. `feat: core forensic engine with Gemini integration` - Core value
-3. `feat: multimodal image analysis support` - Advanced feature
-4. `feat: elevenlabs voice narration` - Polish & engagement
-5. `feat: ui polish and error handling` - Professional execution
-6. `docs: comprehensive README and setup guide` - Clear documentation
+- **Pydantic v2 Compatibility**: ElevenLabs SDK conflict resolved by pinning v0.2.15
+- **Session State Errors**: Streamlit crashes fixed with explicit session state initialization
+- **Model Availability**: Discovered gemini-2.5-flash through iterative testing, documented stable version
+- **Voice Output Quality**: Markdown stripping implemented for clean TTS narration
+- **Cloud Deployment**: Linux venv setup and Streamlit configuration for public access
 
-This progression shows judges:
-- You plan ahead (security first)
-- You iterate thoughtfully
-- You add features incrementally
-- You document thoroughly
+Each fix was committed strategically to show problem-solving methodology.
 
 ## Future Enhancements
 
@@ -150,6 +154,6 @@ MIT - Built for hackers, shared freely.
 
 ---
 
-**Built in ~4 hours by [Your Team] at [Hackathon Name] 2026**
+**Built by Ryan and Bhavya at Hacks for Hackers 2026**
 
 *"Where failed projects become winning ideas."*
