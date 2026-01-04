@@ -1,6 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
-from elevenlabs.client import ElevenLabs
+from elevenlabs import client
 import PIL.Image
 import os
 from dotenv import load_dotenv
@@ -27,24 +27,42 @@ st.write("*Analyzing dead projects. Resurrection guaranteed.*")
 
 # --- ⚙️ SIDEBAR: THE GEAR ---
 with st.sidebar:
-    st.header("🔧 Detective Credentials")
+    st.header("🎙️ Narrator Voice")
     
-    # Try to load from .env, allow manual override
+    # Load keys from .env (no UI needed)
     default_gemini = os.getenv("GEMINI_API_KEY", "")
     default_eleven = os.getenv("ELEVENLABS_API_KEY", "")
+    gemini_key = default_gemini
+    eleven_key = default_eleven
     
-    gemini_key = st.text_input("Gemini API Key", value=default_gemini, type="password", 
-                                placeholder="sk-xxx... or from .env")
-    eleven_key = st.text_input("ElevenLabs API Key", value=default_eleven, type="password",
-                               placeholder="sk-xxx... or from .env")
+    # Curated voices for quick selection
+    curated_voices = ["Roger", "Harry", "Sarah"]
     
-    voice_options = {
-        "Adam": "pNInY6obpgc4xHiPF9nJ",
-        "Clyde": "2EiwWnXFnvU5JabPgLCt",
-        "Nicole": "piTKgcLEGmPLwcF1v8Qu"
-    }
-    voice_name = st.selectbox("Choose Narrator Voice", list(voice_options.keys()))
-    voice_id = voice_options[voice_name]
+    if eleven_key:
+        try:
+            elevenlabs_client = client.ElevenLabs(api_key=eleven_key)
+            voices = elevenlabs_client.voices.get_all()
+            voice_map = {voice.name: voice.voice_id for voice in voices.voices}
+            
+            # Filter to only curated voices
+            available_curated = {name: voice_map[name] for name in curated_voices if name in voice_map}
+            
+            if available_curated:
+                voice_name = st.selectbox("Select Voice", list(available_curated.keys()))
+                voice_id = available_curated[voice_name]
+            else:
+                st.warning("⚠️ Curated voices not found. Using fallback.")
+                fallback = {v: voice_map[v] for v in voice_map.keys() if v in curated_voices}
+                if fallback:
+                    voice_name = st.selectbox("Select Voice", list(fallback.keys()))
+                    voice_id = fallback[voice_name]
+                else:
+                    voice_id = None
+        except Exception as e:
+            st.warning(f"Could not fetch ElevenLabs voices: {str(e)}")
+            voice_id = None
+    else:
+        st.error("⚠️ ElevenLabs API key not found in .env")
 
 # --- 🔦 THE INVESTIGATION ---
 st.divider()
@@ -76,7 +94,19 @@ if st.button("🔍 EXECUTE FORENSIC AUTOPSY", use_container_width=True):
     try:
         # Configure Gemini
         genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        # List available models to find the right one
+        with st.spinner("🔍 Checking available Gemini models..."):
+            available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+            st.write(f"📋 Available models: {available_models}")
+        
+        # Use the first available model that supports generateContent
+        if available_models:
+            model_name = available_models[0].replace('models/', '')
+            model = genai.GenerativeModel(model_name)
+        else:
+            st.error("No suitable Gemini models available with your API key")
+            st.stop()
         
         with st.spinner("🔬 Analyzing the code wreckage..."):
             # Build Multimodal Prompt
@@ -120,8 +150,8 @@ Example tone: "The code was a mess. No tests. No docs. Dead on arrival."
             if eleven_key:
                 try:
                     with st.spinner("🎙️ The detective narrates..."):
-                        client = ElevenLabs(api_key=eleven_key)
-                        audio_stream = client.text_to_speech.convert(
+                        elevenlabs_client = client.ElevenLabs(api_key=eleven_key)
+                        audio_stream = elevenlabs_client.text_to_speech.convert(
                             text=report_text,
                             voice_id=voice_id,
                             model_id="eleven_multilingual_v2"
