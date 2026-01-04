@@ -135,4 +135,4 @@ MIT - Built for hackers, shared freely.
 
 **Built by Ryan and Bhavya at Hacks for Hackers 2026**
 
-*"Where failed projects become winning ideas."*
+*"Where failed hackathons become learning opportunities."*
